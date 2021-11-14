@@ -1,25 +1,28 @@
 syntax = "proto3";
 
 package telegramBotpb;
-option go_package = "telegramBotpb";
+option go_package = "./telegramBotpb";
+
+import "google/api/annotations.proto";
 
 message Message{
     string text = 1;
-    string priority = 2;
+    int32 priority = 2;
 }
 
-message CreateMessageRequest{
-    Message message = 1;
+message SendMessageRequest{
+    repeated Message message = 1;
 }
 
-message CreateMessageResponse{
-    Message message = 1;
+message SendMessageResponse{
+    repeated Message message = 1;
 }
 
-service ContactListService{
-    rpc Create(CreateMessageRequest) returns (CreateMessageResponse){};
-    // rpc Get(GetRequest) returns (GetResponse){};
-    // rpc GetAll(GetAllRequest) returns (GetAllResponse){};
-    // rpc Update(UpdateRequest) returns (UpdateResponse){};
-    // rpc Delete(DeleteRequest) returns (DeleteResponse){};
+service MessageService{
+    rpc Send(SendMessageRequest) returns (SendMessageResponse){
+        option (google.api.http) = {
+            post: "/send"
+            body: "*"
+        };
+    }
 }
